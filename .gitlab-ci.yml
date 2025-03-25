@@ -1,0 +1,35 @@
+stages:
+  - build
+  - push
+
+variables:
+  DOCKER_REGISTRY: "docker.io"
+
+before_script:
+  - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+
+# images building
+build:
+  stage: build
+  script:
+    # builds frontend
+    - docker build -t $DOCKER_USERNAME/frontend ./frontend
+    # builds user-service
+    - docker build -t $DOCKER_USERNAME/user-service ./userserver
+    # builds expense-service
+    - docker build -t $DOCKER_USERNAME/expense-service ./expenseserver
+    # builds budget-service
+    - docker build -t $DOCKER_USERNAME/budget-service ./budgetserver
+
+# Étape de push des images sur Docker Hub
+push:
+  stage: push
+  script:
+    # Push frontend
+    - docker push $DOCKER_USERNAME/frontend
+    # Push user-service
+    - docker push $DOCKER_USERNAME/user-service
+    # Push expense-service
+    - docker push $DOCKER_USERNAME/expense-service
+    # Push budget-service
+    - docker push $DOCKER_USERNAME/budget-service

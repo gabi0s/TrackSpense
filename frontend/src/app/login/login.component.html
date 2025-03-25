@@ -1,0 +1,14 @@
+<div class="login-container">
+  <h2>Connexion</h2>
+  <form (ngSubmit)="onSubmit()" class="login-form">
+    <div class="form-group">
+      <input type="text" [(ngModel)]="email" placeholder="Nom" class="form-input" name="Nom" required />
+    </div>
+    <div class="form-group">
+      <input type="password" [(ngModel)]="password" placeholder="Mot de passe" class="form-input" name="Password" required />
+    </div>
+    <button type="submit" class="login-button" [ngClass]="{'connected-button': isConnected}" [disabled]="isConnected">
+      {{ isConnected ? 'Connecté' : 'Se connecter' }}
+    </button>
+  </form>
+</div>

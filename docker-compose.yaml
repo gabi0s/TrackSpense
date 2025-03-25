@@ -1,0 +1,143 @@
+version: "3.9"
+
+services:
+
+# Database for User Service
+  db_users:
+    image: postgres:15
+    container_name: db_users
+    restart: always
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD_USER}
+      POSTGRES_DB: ${POSTGRES_DB_USER}
+    volumes:
+      - users_data:/var/lib/postgresql/data
+      - ./userdatabase/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - users_network
+
+# User Service
+  user-service:
+    build:
+      context: ./userserver
+      dockerfile: Dockerfile.user
+    container_name: user_service
+    depends_on:
+      - db_users
+    env_file:
+      - .env
+    environment:
+      DB_HOST: ${DB_HOST_USER}
+      DB_USER: ${POSTGRES_USER_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD_USER}
+      DB_NAME: ${POSTGRES_DB_USER}
+    networks:
+      - users_network
+    ports:
+      - "8080:8080"
+
+# Database for Expense Service
+  db_expenses:
+    image: postgres:15
+    container_name: db_expenses
+    restart: always
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER_EXPENSE}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD_EXPENSE}
+      POSTGRES_DB: ${POSTGRES_DB_EXPENSE}
+    volumes:
+      - expenses_data:/var/lib/postgresql/data
+      - ./expensedatabase/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - expenses_network
+
+# Expense Service
+  expense-service:
+    build:
+      context: expenseserver
+      dockerfile: Dockerfile.expense
+    container_name: expense_service
+    depends_on:
+      - db_expenses
+    env_file:
+      - .env
+    environment:
+      DB_HOST: ${DB_HOST_EXPENSE}
+      DB_USER: ${POSTGRES_USER_EXPENSE}
+      DB_PASSWORD: ${POSTGRES_PASSWORD_EXPENSE}
+      DB_NAME: ${POSTGRES_DB_EXPENSE}
+    networks:
+      - expenses_network
+    ports:
+      - "8081:8081"
+
+# Database for Budget Service
+  db_budget:
+    image: postgres:15
+    container_name: db_budget
+    restart: always
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER_BUDGET}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD_BUDGET}
+      POSTGRES_DB: ${POSTGRES_DB_BUDGET}
+    volumes:
+      - budget_data:/var/lib/postgresql/data
+      - ./budgetdatabase/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - budget_network
+
+# Budget Service
+  budget-service:
+    build:
+      context: ./budgetserver
+      dockerfile: Dockerfile.budget
+    container_name: budget_service
+    depends_on:
+      - db_budget
+    env_file:
+      - .env
+    environment:
+      DB_HOST_BUDGET: ${DB_HOST_BUDGET}
+      DB_USER_BUDGET: ${POSTGRES_USER_BUDGET}
+      DB_PASSWORD_BUDGET: ${POSTGRES_PASSWORD_BUDGET}
+      DB_NAME_BUDGET: ${POSTGRES_DB_BUDGET}
+    networks:
+      - budget_network
+    ports:
+      - "8082:8082"
+
+# frontend Angular
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    ports:
+      - "4200:4200"
+    volumes:
+      - ./frontend:/app  # monts frontend dir for hot reloading feature
+      - /app/node_modules
+    command: ["npm", "start"]
+
+
+networks:
+  users_network: # network for user-service and its database
+    driver: bridge
+
+  expenses_network: # .. for expense-service and its database
+    driver: bridge
+
+  budget_network: # ....
+    driver: bridge
+
+volumes: # data persistence for all micro-services databases
+  users_data:
+  expenses_data:
+  budget_data:

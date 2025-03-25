@@ -1,0 +1,42 @@
+<div class="expense-container">
+  <h2>Gestion des Dépenses</h2>
+
+  <div class="add-expense-form">
+    <h3>Ajouter une Dépense</h3>
+    
+    <div class="form-group">
+      <label for="category">Catégorie:</label>
+      <select id="category" [(ngModel)]="selectedCategory" class="form-control">
+        <option *ngFor="let category of categories" [ngValue]="category">
+          {{ category.category }} (Budget: {{ category.budgets_limit }} €)
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="amount">Montant:</label>
+      <input type="number" id="amount" [(ngModel)]="expenseAmount" class="form-control" placeholder="Entrez le montant">
+    </div>
+
+    <button (click)="addExpense()" class="btn btn-primary">Ajouter Dépense</button>
+  </div>
+
+  <div class="expenses-list">
+    <h3>Historique des Dépenses</h3>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Catégorie</th>
+          <th>Montant</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let expense of expenses">
+          <td>{{ expense.budget_categorie }}</td>
+          <td>{{ expense.price }} €</td>
+          
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

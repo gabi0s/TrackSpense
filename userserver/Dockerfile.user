@@ -1,0 +1,35 @@
+# First step : App construction
+FROM golang:1.19 AS builder
+
+# defines the folder name
+WORKDIR /app
+
+# copies project files in the image
+COPY . .
+
+# downloads dependencies and builds the user server
+RUN go mod download
+RUN go mod tidy
+RUN go build -o user-service main.go
+
+# Second step : final light image
+FROM debian:bookworm-slim
+
+# defines work directory
+WORKDIR /app
+
+# copies all files needed 
+COPY --from=builder /app/user-service /app/
+
+# copies swagger documentation in the context
+#COPY --from=builder /app/docs /app/docs/
+
+# updates libc (problems without it)
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    libc6 libc6-dev
+# user service is exposed on the port 8080
+EXPOSE 8080
+
+# launchs app
+CMD ["./user-service"]

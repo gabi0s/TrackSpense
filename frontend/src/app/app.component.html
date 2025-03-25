@@ -1,0 +1,38 @@
+<!-- Barre de navigation -->
+<nav class="navbar">
+  <div class="container">
+    <h1>Gestion de Budget</h1>
+    <div class="buttons">
+      <!-- seulement si NON connecté -->
+      <button *ngIf="!authService.isAuthenticated()" 
+              routerLink="/login" 
+              class="nav-button">
+        Connexion
+      </button>
+
+      <!-- seulement si connecté -->
+      <button *ngIf="authService.isAuthenticated()" 
+              routerLink="/expenses" 
+              class="nav-button">
+        Dépenses
+      </button>
+
+      <button *ngIf="authService.isAuthenticated()" 
+              routerLink="/budget" 
+              class="nav-button">
+        Budget
+      </button>
+
+      <button *ngIf="authService.isAuthenticated()" 
+              (click)="logout()" 
+              class="nav-button">
+        Déconnexion
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- Contenu de la page -->
+<div class="main-content">
+  <router-outlet></router-outlet>
+</div>

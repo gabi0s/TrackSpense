@@ -1,0 +1,42 @@
+<div class="container">
+  <h1>Gestion de Budget</h1>
+
+  <!-- Section du solde -->
+  <div *ngIf="solde !== null">
+    <h2>Solde Actuel : <span class="highlight">{{ solde }} €</span></h2>
+    <div class="update-section">
+      <input [(ngModel)]="customAmount" type="number" placeholder="Montant" class="amount-input" />
+      <button (click)="updateSolde(customAmount)">Ajouter/Retirer</button>
+    </div>
+  </div>
+
+  <div *ngIf="solde === null">
+    <p>Chargement du solde...</p>
+  </div>
+
+  <hr>
+
+  <!-- Section des budgets -->
+  <h2>Budgets par Catégorie</h2>
+
+  <div class="budget-form">
+    <input [(ngModel)]="newCategory" type="text" placeholder="Nouvelle Catégorie" />
+    <input [(ngModel)]="budgetLimit" type="number" placeholder="Limite de budget (€)" />
+    <button (click)="createNewBudget()">Créer Budget</button>
+  </div>
+
+  <div *ngIf="budgets.length > 0">
+    <div class="budget-list">
+      <div *ngFor="let budget of budgets" class="budget-item">
+        <h3>{{ budget.category }}</h3>
+        <p>Limite: <span class="highlight">{{ budget.budgets_limit }} €</span></p>
+        <p>Dépensé: <span class="highlight">{{ budget.current_amount }} €</span></p>
+        <button class="delete-btn" (click)="deleteBudget(budget.budgets_id)"> Supprimer</button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="budgets.length === 0">
+    <p>Aucun budget défini.</p>
+  </div>
+</div>

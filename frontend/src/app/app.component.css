@@ -1,0 +1,58 @@
+/* Style général */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    color: #333;
+  }
+  
+  /* Barre de navigation */
+  .navbar {
+    background-color: #3498db; /* Couleur de fond */
+    padding: 15px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .navbar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+  .navbar h1 {
+    margin: 0;
+    font-size: 24px;
+    color: #fff; /* Texte blanc */
+  }
+  
+  /* Boutons de navigation */
+  .buttons {
+    display: flex;
+    gap: 10px; /* Espace entre les boutons */
+  }
+  
+  .nav-button {
+    background-color: #2980b9; /* Couleur des boutons */
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .nav-button:hover {
+    background-color: #1c5980; /* Couleur au survol */
+  }
+  
+  /* Contenu principal */
+  .main-content {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 0 20px;
+  }
